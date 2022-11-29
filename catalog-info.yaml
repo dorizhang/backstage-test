@@ -11,3 +11,7 @@ spec:
   type: website
   owner: john@example.com
   lifecycle: experimental
+impactedControls: 
+- x001
+- x002
+- x003 

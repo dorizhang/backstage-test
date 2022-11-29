@@ -7,3 +7,8 @@ metadata:
     gitlab.com/project-slug: 'Developer Experience/demo-microservice1'
 spec:
   type: service
+  lifecycle: experimental
+impactedControls: 
+ - x001
+ - x002
+ - x003

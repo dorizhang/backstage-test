@@ -1,0 +1,9 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: gitlab-testing
+  description: Hello
+  annotations:
+    gitlab.com/project-slug: 'Developer Experience/demo-microservice1'
+spec:
+  type: service

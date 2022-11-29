@@ -1,15 +1,17 @@
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
-  name: gitlab-testing
-  description: Hello
-  annotations:
-    gitlab.com/project-slug: 'Developer Experience/demo-microservice1'
+  name: testing
+  description: An example of a Backstage application.
+  # Example for optional annotations
+  # annotations:
+  #   github.com/project-slug: backstage/backstage
+  #   backstage.io/techdocs-ref: dir:.
 spec:
   type: service
   owner: dori@example.com
-  lifecycle: experimental
+  lifecycle: production
 impactedControls: 
- - x001
- - x002
- - x003
+- x001
+- x002
+- x003 

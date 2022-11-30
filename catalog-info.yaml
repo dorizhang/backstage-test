@@ -5,12 +5,9 @@ metadata:
   description: An example of a Backstage application.
   # Example for optional annotations
   annotations:
-    impactedControls: 
-      - x001
-      - x002
-      - x003
-  #   github.com/project-slug: backstage/backstage
-  #   backstage.io/techdocs-ref: dir:. 
+    impactedControls: { x001, x002, x003 }
+    github.com/project-slug: backstage/backstage
+    backstage.io/techdocs-ref: dir:. 
 spec:
   type: website
   owner: john@example.com

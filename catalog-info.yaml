@@ -9,6 +9,9 @@ metadata:
     backstage.io/techdocs-ref: dir:.
     impactedControls: '["x001", "x002", "x003"]'
   impactedControls: ["x001", "x002", "x003"]
+  tags:
+    - java
+    - go
 spec:
   type: website
   owner: john@example.com

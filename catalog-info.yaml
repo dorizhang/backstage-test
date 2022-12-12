@@ -6,7 +6,7 @@ metadata:
   # Example for optional annotations
   annotations:
     github.com/project-slug: backstage/backstage
-    backstage.io/techdocs-ref: dir:.
+#     backstage.io/techdocs-ref: dir:.
     impactedControls: '["x001", "x002", "x003"]'
   impactedControls: ["x001", "x002", "x003"]
   tags:

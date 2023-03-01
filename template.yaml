@@ -20,7 +20,7 @@ metadata:
       icon: help
       type: process
 spec:
-  owner: owner:guest
+  owner: owner:developers
   type: service
   lifecycle: production
   system: data-systems

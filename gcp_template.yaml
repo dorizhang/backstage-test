@@ -1,0 +1,157 @@
+---
+apiVersion: scaffolder.backstage.io/v1beta3
+# https://backstage.io/docs/features/software-catalog/descriptor-format#kind-template
+kind: Template
+metadata:
+  name: cap-gcp-minimal-hub-template
+  title: GCP - Minimal Hub
+  description: A pre-built enterprise-ready landing zone in a single subscription with tailored guidance through the whole process and a suite of custom resources and modules.
+  tags:
+    - gcp
+    - recommended
+    - terraform
+  links:
+    - url: https://psinnersource.lioncloud.net/products/product-100003
+      title: Innersource Details
+      icon: docs
+      type: documentation
+    - url: https://dev.pspathfinder.co.uk/docs https://psinnersource.lioncloud.net/products/product-100003
+      title: Architecture
+      icon: docs
+      type: documentation
+    - url: https://dev.pspathfinder.co.uk/docs
+      title: Contributing
+      icon: user
+      type: contributing
+  annotations:
+    backstage.io/techdocs-ref: dir:./content
+spec:
+  owner: owner:guest
+  type: service
+  lifecycle: experimental
+  system: cloud-services
+
+  # These parameters are used to generate the input form in the frontend, and are
+  # used to gather input data for the execution of the template.
+  parameters:
+    - title: BASICS
+      required:
+        - application
+        - billing
+        - description
+      properties:
+        application:
+          title: Application
+          type: string
+          description: Unique name for this hub
+          ui:autofocus: true
+        description:
+          title: Description
+          type: string
+          description: What will this hub be used for?
+          ui:options:
+            rows: 5
+        billing:
+          title: Billing
+          type: string
+          default: CAP
+          description: Where does the project bill to?
+        contact:
+          title: Contact
+          type: string
+          description: How to contact you?
+        owner:
+          title: OWNER
+          type: string
+          description: Who will own this environment?
+          ui:field: OwnerPicker
+          ui:options:
+            catalogFilter:
+              kind: [Group, User]
+    - title: BUDGET
+      description: What budget should be set?
+      required:
+        - amount
+      properties:
+        amount:
+          title: AMOUNT
+          type: string
+          description: Budget for this application?
+    - title: CODE
+      required:
+        - repoOwner
+        - repoHost
+      properties:
+        repoHost:
+          title: REPOSITORY HOST
+          type: string
+          enum:
+            - pscode.lioncloud.net
+          default: pscode.lioncloud.net
+        repoOwner:
+          title: REPOSITORY OWNER
+          type: string
+          default: psinnersource/cloud/cap/developer-experience/demos/sandbox-demo
+          enum:
+            - psinnersource/cloud/cap/developer-experience/demos/sandbox-demo
+            - psinnersource/cloud/cap/gcp-cap/demos
+            - psinnersource/cloud/cap/cap-azure/pathfinder/demos/demo1
+            - psinnersource/cloud/cap/cap-azure/pathfinder/demos/db-nonprod
+            - psinnersource/cloud/cap/cap-azure/pathfinder/demos/db-prod
+            - psinnersource/cloud/cap/cap-azure/pathfinder/demos/demo2
+
+  # These steps are executed in the scaffolder backend, using data that we gathered
+  # via the parameters above.
+  steps:
+    # Each step executes an action, in this case one templates files into the working directory.
+    - id: fetch-base
+      name: Fetch Base
+      action: fetch:template
+      input:
+        url: ./content
+        values:
+          name: ${{ parameters.application }}
+          application: ${{ parameters.application }}
+          description: ${{ parameters.description }}
+          billing: ${{ parameters.billing }}
+          contact: ${{ parameters.contact }}
+          repo_url: ${{ [parameters.repoHost,"?owner=",(parameters.repoOwner|urlencode),"&repo=",(parameters.application | urlencode)] | join }}
+          repo_owner: ${{ parameters.repoOwner }}
+          repo_name: ${{ parameters.application }}
+          group_owner: ${{parameters.owner}}
+
+    # This step publishes the contents of the working directory to Pscode.
+    - id: fetch-docs
+      name: Fetch Docs
+      action: fetch:plain
+      input:
+        targetPath: ./docs
+        url: https://pscode.lioncloud.net/psinnersource/cloud/cap/gcp-cap/demos/thoughtmachine/-/tree/main/docs
+
+    # This step publishes the contents of the working directory to pscode.
+    - id: publish
+      name: Publish
+      action: publish:gitlab
+      input:
+        defaultBranch: "main"
+        gitCommitMessage: "Generated initial commit for: ${{parameters.name}}"
+        repoVisibility: "internal"
+        repoUrl: ${{ [parameters.repoHost,"?owner=",(parameters.repoOwner|urlencode),"&repo=",(parameters.application | urlencode)] | join }}
+
+    # The final step is to register our new component in the catalog.
+    - id: register
+      name: Register
+      action: catalog:register
+      input:
+        repoContentsUrl: ${{ steps.publish.output.repoContentsUrl }}
+        defaultBranch: "main"
+        catalogInfoPath: "/catalog-info.yaml"
+
+  # Outputs are displayed to the user after a successful execution of the template.
+  output:
+    links:
+      - title: Repository
+        url: ${{ steps.publish.output.remoteUrl }}
+      - title: Open in catalog
+        icon: catalog
+        entityRef: ${{ steps.register.output.entityRef }}

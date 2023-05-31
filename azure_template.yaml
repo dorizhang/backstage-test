@@ -20,7 +20,7 @@ metadata:
       icon: user
       type: contributing
   annotations:
-    backstage.io/techdocs-ref: dir:./content
+    backstage.io/techdocs-ref: dir:./relative
 spec:
   owner: owner:guest
   type: service
